@@ -1,0 +1,49 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: src/main/resources/bootsecurity.p12
+    key-store-password: bootsecurity
+    key-store-type: PKCS12
+    key-alias: bootsecurity
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oauth2?serverTimezone=UTC&useSSL=false
+    username: oauth2
+    password: bitc5600
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    #show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 
+            client-secret: 
+            scope:
+            - email
+            - public_profile
+
+          google: 
+            client-id: 
+            client-secret: 
+            scope: 
+            - email
+            - profile
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+          
