@@ -1,7 +1,6 @@
 package com.example.springsocial.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +21,9 @@ public class UserController {
     	return "<h1>Welcome Home</h1>";
     }
     
-    @GetMapping("/user/me")
+    @GetMapping("/user")
     public User getCurrentUser(@AuthenticationPrincipal  UserPrincipal userPrincipal) {
+    	System.out.println(userPrincipal.getId());
         return userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }

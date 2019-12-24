@@ -2,7 +2,7 @@
 
 ![blog](https://postfiles.pstatic.net/MjAxOTEyMjNfNTQg/MDAxNTc3MTA0ODI0NDc0.7uY2TtTvD8YB6Vx_4KxmKP4xOvYWdzBAu36XAxLymtUg.dHHk6Mkqwz7bvtviB7pdVTZ1cPZqpkDWKmoRl5Kanl0g.PNG.getinthere/Screenshot_79.png?type=w773)
 
-![blog](https://postfiles.pstatic.net/MjAxOTEyMjNfMTQ2/MDAxNTc3MTA0ODI0NDcz.bjHb6lolyy0B4Zd8CI80_qBEpqhJpSld5whDkDMqi0Ig.RvcfbQpejCNOS9JMqMxzQMXMwzcxvTKXW4wyRywAvGsg.PNG.getinthere/Screenshot_80.png?type=w773)
+![blog](https://postfiles.pstatic.net/MjAxOTEyMjRfMjcx/MDAxNTc3MTczMzI4MjAw.h1_ZsJNAOkCPoBNkC6S1Di-goRnZFbAGMf-0foC5nLQg.N9HL6KrmrKtXZ6pKFqakSl6_rtzldiy-ztmaOLNtPMwg.PNG.getinthere/Screenshot_83.png?type=w773)
 
 ![blog](https://postfiles.pstatic.net/MjAxOTEyMjNfMjkg/MDAxNTc3MTA0ODk5NTAz.dgsxPDjV5CtZCQ2A8TkPNEJ0WYPMWnRd4acN7wHgxNog.s9d-VjMpiE33U42bnxA1PW1LHMS7R5YV8JfEmVK0W_kg.PNG.getinthere/Screenshot_82.png?type=w773)
 
@@ -51,13 +51,6 @@ spring:
             scope: 
             - email
             - profile
-
-app:
-  auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-    tokenExpirationMsec: 864000000
-          
-
           
 ```
 

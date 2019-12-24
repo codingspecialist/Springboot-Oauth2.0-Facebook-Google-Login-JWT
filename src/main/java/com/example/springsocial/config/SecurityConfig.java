@@ -1,11 +1,11 @@
 package com.example.springsocial.config;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2Clien
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,8 +30,13 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
+import com.example.springsocial.repository.UserRepository;
 import com.example.springsocial.security.CustomUserDetailsService;
+import com.example.springsocial.security.jwt.JwtBasicAuthenticationFilter;
+import com.example.springsocial.security.jwt.JwtCommonAuthorizationFilter;
+import com.example.springsocial.security.jwt.JwtTokenProvider;
 import com.example.springsocial.security.oauth2.CustomOAuth2UserService;
 
 @Configuration
@@ -49,6 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 	
 	@Bean
 	public BCryptPasswordEncoder encodePWD() {
@@ -62,6 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.formLogin().disable();
 		http.httpBasic().disable();
+		
+		http.addFilter(new JwtBasicAuthenticationFilter());
+		http.addFilter(new JwtCommonAuthorizationFilter(authenticationManager(), tokenProvider, userRepository));
 		
 		http.authorizeRequests()
 					.antMatchers("/user/**").access("hasRole('ROLE_USER')")
@@ -77,20 +90,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			@Override
 			public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 					Authentication authentication) throws IOException, ServletException {
-				PrintWriter out = response.getWriter();
-				out.println("LOGIN OK");
-				out.flush();
+		    	String token = tokenProvider.create(authentication);
+		        response.addHeader("Authorization", "Bearer " +  token);
+		        String targetUrl = "/auth/success"; 
+		        RequestDispatcher dis = request.getRequestDispatcher(targetUrl);
+		        dis.forward(request, response);
 			}
 		})
 		.failureHandler(new AuthenticationFailureHandler() {
-			
 			@Override
 			public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 					AuthenticationException exception) throws IOException, ServletException {
-				PrintWriter out = response.getWriter();
-				out.println("LOGIN Fail");
-				out.flush();
-				
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");	
 			}
 		});
 	}
